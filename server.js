@@ -2,7 +2,7 @@ const express = require('express');
 const hbs = require('hbs');
 const fs = require('file-system');
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 var app = express();
 
 hbs.registerPartials(__dirname + '/views/partials');
@@ -22,11 +22,7 @@ app.use((req, res, next) =>{
     }
   });
 
-  res.render('maintenance.hbs',{
-    pageTitle: 'Maintenance page',
-    aboutMessage: 'This website is under maintenance'
-  })
-
+  next();
 });
 
 hbs.registerHelper('getCurrentYear',()=>{
@@ -52,10 +48,19 @@ app.get('/about', (req, res) => {
   })
 });
 
+app.get('/projects', (req, res) => {
+  res.render('projects.hbs',{
+    pageTitle: 'Projects page',
+    projectsLink: 'https://github.com/ronimour?tab=repositories',
+    linkTitle: "My projects",
+    currentYear: new Date().getFullYear()
+  })
+});
+
 app.get('/bad', (req, res) => {
   res.send('Unable to precess the request');
 });
 
-app.listen(3000, () => {
-  console.log('Server is up on port 3000');
+app.listen(port, () => {
+  console.log(`Server is up on port ${port}`);
 });
